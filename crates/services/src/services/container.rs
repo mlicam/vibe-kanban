@@ -29,6 +29,7 @@ use executors::{
         coding_agent_initial::CodingAgentInitialRequest,
         script::{ScriptContext, ScriptRequest, ScriptRequestLanguage},
     },
+    command::ProfileVariant,
     executors::{CodingAgent, ExecutorError, StandardCodingAgentExecutor},
     logs::utils::patch::ConversationPatch,
 };
@@ -299,21 +300,21 @@ pub trait ContainerService {
             // Spawn normalizer on populated store
             match executor_action.typ() {
                 ExecutorActionType::CodingAgentInitialRequest(request) => {
-                    if let Ok(executor) = CodingAgent::from_profile_str(&request.profile) {
+                    if let Ok(executor) = CodingAgent::from_profile_variant(&request.profile) {
                         executor.normalize_logs(temp_store.clone(), &current_dir);
                     } else {
                         tracing::error!(
-                            "Failed to resolve profile '{}' for normalization",
+                            "Failed to resolve profile '{:?}' for normalization",
                             request.profile
                         );
                     }
                 }
                 ExecutorActionType::CodingAgentFollowUpRequest(request) => {
-                    if let Ok(executor) = CodingAgent::from_profile_str(&request.profile) {
+                    if let Ok(executor) = CodingAgent::from_profile_variant(&request.profile) {
                         executor.normalize_logs(temp_store.clone(), &current_dir);
                     } else {
                         tracing::error!(
-                            "Failed to resolve profile '{}' for normalization",
+                            "Failed to resolve profile '{:?}' for normalization",
                             request.profile
                         );
                     }
@@ -413,7 +414,7 @@ pub trait ContainerService {
     async fn start_attempt(
         &self,
         task_attempt: &TaskAttempt,
-        profile_label: String,
+        profile_id: ProfileVariant,
     ) -> Result<ExecutionProcess, ContainerError> {
         // Create container
         self.create(task_attempt).await?;
@@ -458,7 +459,7 @@ pub trait ContainerService {
                 Some(Box::new(ExecutorAction::new(
                     ExecutorActionType::CodingAgentInitialRequest(CodingAgentInitialRequest {
                         prompt: task.to_prompt(),
-                        profile: profile_label,
+                        profile: profile_id,
                     }),
                     cleanup_action,
                 ))),
@@ -474,7 +475,7 @@ pub trait ContainerService {
             let executor_action = ExecutorAction::new(
                 ExecutorActionType::CodingAgentInitialRequest(CodingAgentInitialRequest {
                     prompt: task.to_prompt(),
-                    profile: profile_label,
+                    profile: profile_id,
                 }),
                 cleanup_action,
             );
@@ -516,13 +517,19 @@ pub trait ContainerService {
             ExecutionProcess::create(&self.db().pool, &create_execution_process, Uuid::new_v4())
                 .await?;
 
-        if let ExecutorActionType::CodingAgentInitialRequest(coding_agent_request) =
-            executor_action.typ()
-        {
+        if let Some(prompt) = match executor_action.typ() {
+            ExecutorActionType::CodingAgentInitialRequest(coding_agent_request) => {
+                Some(coding_agent_request.prompt.clone())
+            }
+            ExecutorActionType::CodingAgentFollowUpRequest(follow_up_request) => {
+                Some(follow_up_request.prompt.clone())
+            }
+            _ => None,
+        } {
             let create_executor_data = CreateExecutorSession {
                 task_attempt_id: task_attempt.id,
                 execution_process_id: execution_process.id,
-                prompt: Some(coding_agent_request.prompt.clone()),
+                prompt: Some(prompt),
             };
 
             let executor_session_record_id = Uuid::new_v4();
@@ -543,14 +550,14 @@ pub trait ContainerService {
         match executor_action.typ() {
             ExecutorActionType::CodingAgentInitialRequest(request) => {
                 if let Some(msg_store) = self.get_msg_store_by_id(&execution_process.id).await {
-                    if let Ok(executor) = CodingAgent::from_profile_str(&request.profile) {
+                    if let Ok(executor) = CodingAgent::from_profile_variant(&request.profile) {
                         executor.normalize_logs(
                             msg_store,
                             &self.task_attempt_to_current_dir(task_attempt),
                         );
                     } else {
                         tracing::error!(
-                            "Failed to resolve profile '{}' for normalization",
+                            "Failed to resolve profile '{:?}' for normalization",
                             request.profile
                         );
                     }
@@ -558,14 +565,14 @@ pub trait ContainerService {
             }
             ExecutorActionType::CodingAgentFollowUpRequest(request) => {
                 if let Some(msg_store) = self.get_msg_store_by_id(&execution_process.id).await {
-                    if let Ok(executor) = CodingAgent::from_profile_str(&request.profile) {
+                    if let Ok(executor) = CodingAgent::from_profile_variant(&request.profile) {
                         executor.normalize_logs(
                             msg_store,
                             &self.task_attempt_to_current_dir(task_attempt),
                         );
                     } else {
                         tracing::error!(
-                            "Failed to resolve profile '{}' for normalization",
+                            "Failed to resolve profile '{:?}' for normalization",
                             request.profile
                         );
                     }

@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
 import { Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { attemptsApi, projectsApi } from '@/lib/api';
-import type { GitBranch } from 'shared/types';
+import type { GitBranch, ProfileVariant } from 'shared/types';
 import type { TaskAttempt } from 'shared/types';
 
 import {
@@ -89,7 +89,9 @@ function TaskDetailsToolbar() {
   const [taskAttempts, setTaskAttempts] = useState<TaskAttempt[]>([]);
   const [branches, setBranches] = useState<GitBranch[]>([]);
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
-  const [selectedProfile, setSelectedProfile] = useState<string | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<ProfileVariant | null>(
+    null
+  );
 
   const location = useLocation();
   const { system, profiles } = useUserSystem();
