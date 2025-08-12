@@ -50,7 +50,6 @@ fn unknown_executor_error(s: &str) -> ExecutorError {
     strum_macros::EnumString,
     strum_macros::EnumIter,
 )]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[strum(parse_err_ty = ExecutorError, parse_err_fn = unknown_executor_error)]
 #[strum_discriminants(
@@ -67,16 +66,22 @@ fn unknown_executor_error(s: &str) -> ExecutorError {
     serde(rename_all = "SCREAMING_SNAKE_CASE")
 )]
 pub enum CodingAgent {
-    // Echo,
-    #[serde(alias = "claude")]
-    ClaudeCode,
-    // ClaudePlan,
-    Amp,
-    Gemini,
-    Codex,
-    // ClaudeCodeRouter,
-    Opencode,
-    // Aider,
+    #[serde(rename = "CLAUDE_CODE", alias = "claude")]
+    ClaudeCode(ClaudeCode),
+    #[serde(rename = "AMP")]
+    Amp(Amp),
+    #[serde(rename = "GEMINI")]
+    Gemini(Gemini),
+    #[serde(rename = "CODEX")]
+    Codex(Codex),
+    #[serde(rename = "OPENCODE")]
+    Opencode(Opencode),
+}
+
+impl std::fmt::Display for CodingAgent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        BaseCodingAgent::from(self).fmt(f)
+    }
 }
 
 impl CodingAgent {
@@ -94,26 +99,7 @@ impl CodingAgent {
     /// Loads profile from AgentProfiles (both default and custom profiles)
     pub fn from_profile_str(profile: &str) -> Result<Self, ExecutorError> {
         if let Some(agent_profile) = AgentProfiles::get_cached().get_profile(profile) {
-            match agent_profile.agent {
-                BaseCodingAgent::ClaudeCode => {
-                    Ok(CodingAgent::ClaudeCode(ClaudeCode::with_command_builder(
-                        profile.to_string(),
-                        agent_profile.command.clone(),
-                    )))
-                }
-                BaseCodingAgent::Amp => Ok(CodingAgent::Amp(Amp::with_command_builder(
-                    agent_profile.command.clone(),
-                ))),
-                BaseCodingAgent::Gemini => Ok(CodingAgent::Gemini(Gemini::with_command_builder(
-                    agent_profile.command.clone(),
-                ))),
-                BaseCodingAgent::Codex => Ok(CodingAgent::Codex(Codex::with_command_builder(
-                    agent_profile.command.clone(),
-                ))),
-                BaseCodingAgent::Opencode => Ok(CodingAgent::Opencode(
-                    Opencode::with_command_builder(agent_profile.command.clone()),
-                )),
-            }
+            Ok(agent_profile.agent.clone())
         } else {
             Err(ExecutorError::UnknownExecutorType(format!(
                 "Unknown profile: {profile}"

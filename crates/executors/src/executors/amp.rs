@@ -13,7 +13,7 @@ use utils::{
 
 use crate::{
     command::{AgentProfiles, CommandBuilder},
-    executors::{ExecutorError, StandardCodingAgentExecutor},
+    executors::{CodingAgent, ExecutorError, StandardCodingAgentExecutor},
     logs::{
         ActionType, EditDiff, NormalizedEntry, NormalizedEntryType,
         stderr_processor::normalize_stderr_logs,
@@ -24,7 +24,7 @@ use crate::{
 /// An executor that uses Amp to process tasks
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, TS)]
 pub struct Amp {
-    command_builder: CommandBuilder,
+    pub command: CommandBuilder,
 }
 
 impl Default for Amp {
@@ -41,7 +41,7 @@ impl StandardCodingAgentExecutor for Amp {
         prompt: &str,
     ) -> Result<AsyncGroupChild, ExecutorError> {
         let (shell_cmd, shell_arg) = get_shell_command();
-        let amp_command = self.command_builder.build_initial();
+        let amp_command = self.command.build_initial();
 
         let mut command = Command::new(shell_cmd);
         command
@@ -72,7 +72,7 @@ impl StandardCodingAgentExecutor for Amp {
     ) -> Result<AsyncGroupChild, ExecutorError> {
         // Use shell command for cross-platform compatibility
         let (shell_cmd, shell_arg) = get_shell_command();
-        let amp_command = self.command_builder.build_follow_up(&[
+        let amp_command = self.command.build_follow_up(&[
             "threads".to_string(),
             "continue".to_string(),
             session_id.to_string(),
@@ -228,11 +228,10 @@ impl Amp {
             .get_profile("amp")
             .expect("Default amp profile should exist");
 
-        Self::with_command_builder(profile.command.clone())
-    }
-
-    pub fn with_command_builder(command_builder: CommandBuilder) -> Self {
-        Self { command_builder }
+        match &profile.agent {
+            CodingAgent::Amp(amp) => amp.clone(),
+            _ => panic!("Expected Amp agent in amp profile"),
+        }
     }
 }
 
