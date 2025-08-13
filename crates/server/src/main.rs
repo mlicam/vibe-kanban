@@ -6,7 +6,8 @@ use strip_ansi_escapes::strip;
 use thiserror::Error;
 use tracing_subscriber::{prelude::*, EnvFilter};
 use utils::{
-    assets::asset_dir, browser::open_browser, port_file::maybe_write_port_file, sentry::sentry_layer,
+    assets::asset_dir, browser::open_browser, port_file::maybe_write_port_file,
+    sentry::sentry_layer,
 };
 
 #[derive(Debug, Error)]
