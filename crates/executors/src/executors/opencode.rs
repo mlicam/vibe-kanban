@@ -636,11 +636,14 @@ impl ToolUtils {
                 description: format!("Web fetch: {url}"),
             },
             Tool::TodoWrite { todos } => ActionType::TodoManagement {
-                todos: todos.iter().map(|t| TodoItem {
-                    content: t.content.clone(),
-                    status: t.status.clone(),
-                    priority: t.priority.clone(),
-                }).collect(),
+                todos: todos
+                    .iter()
+                    .map(|t| TodoItem {
+                        content: t.content.clone(),
+                        status: t.status.clone(),
+                        priority: t.priority.clone(),
+                    })
+                    .collect(),
                 operation: "write".to_string(),
             },
             Tool::TodoRead => ActionType::TodoManagement {
@@ -713,7 +716,6 @@ impl ToolUtils {
             }
         }
     }
-
 }
 
 // =============================================================================
