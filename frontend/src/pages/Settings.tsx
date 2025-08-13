@@ -298,8 +298,10 @@ export function Settings() {
                     const selectedProfile = profiles?.find(
                       (p) => p.label === config.profile?.profile
                     );
-                    const hasVariants = selectedProfile?.variants && selectedProfile.variants.length > 0;
-                    
+                    const hasVariants =
+                      selectedProfile?.variants &&
+                      selectedProfile.variants.length > 0;
+
                     if (hasVariants) {
                       return (
                         <DropdownMenu>
@@ -359,7 +361,9 @@ export function Settings() {
                           className="w-full h-10 px-2 flex items-center justify-between"
                           disabled
                         >
-                          <span className="text-sm truncate flex-1 text-left">Default</span>
+                          <span className="text-sm truncate flex-1 text-left">
+                            Default
+                          </span>
                         </Button>
                       );
                     }
@@ -695,7 +699,9 @@ export function Settings() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="profiles-editor">Profiles Configuration</Label>
+                  <Label htmlFor="profiles-editor">
+                    Profiles Configuration
+                  </Label>
                   <Textarea
                     id="profiles-editor"
                     placeholder={
@@ -718,8 +724,8 @@ export function Settings() {
                     </p>
                   )}
                   <p className="text-sm text-muted-foreground">
-                    Edit coding agent profiles. Each profile needs a unique label,
-                    agent type, and command configuration.
+                    Edit coding agent profiles. Each profile needs a unique
+                    label, agent type, and command configuration.
                   </p>
                 </div>
 

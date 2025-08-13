@@ -6,16 +6,16 @@ interface ProfileVariantBadgeProps {
   className?: string;
 }
 
-export function ProfileVariantBadge({ profileVariant, className }: ProfileVariantBadgeProps) {
+export function ProfileVariantBadge({
+  profileVariant,
+  className,
+}: ProfileVariantBadgeProps) {
   if (!profileVariant) {
     return null;
   }
 
   return (
-    <span className={cn(
-      "text-xs text-muted-foreground",
-      className
-    )}>
+    <span className={cn('text-xs text-muted-foreground', className)}>
       {profileVariant.profile}
       {profileVariant.variant && (
         <>

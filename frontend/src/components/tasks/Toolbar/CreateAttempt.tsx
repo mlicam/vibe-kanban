@@ -232,8 +232,10 @@ function CreateAttempt({
                 const currentProfile = availableProfiles?.find(
                   (p) => p.label === selectedProfile?.profile
                 );
-                const hasVariants = currentProfile?.variants && currentProfile.variants.length > 0;
-                
+                const hasVariants =
+                  currentProfile?.variants &&
+                  currentProfile.variants.length > 0;
+
                 if (hasVariants) {
                   return (
                     <DropdownMenu>

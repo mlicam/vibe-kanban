@@ -8,10 +8,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
-import type {
-  ExecutionProcessStatus,
-  ExecutionProcess,
-} from 'shared/types';
+import type { ExecutionProcessStatus, ExecutionProcess } from 'shared/types';
 import { useLogStream } from '@/hooks/useLogStream';
 import { useProcessConversation } from '@/hooks/useProcessConversation';
 import DisplayConversationEntry from '@/components/NormalizedConversation/DisplayConversationEntry';

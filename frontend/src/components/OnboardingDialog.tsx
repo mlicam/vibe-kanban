@@ -106,14 +106,16 @@ export function OnboardingDialog({ open, onComplete }: OnboardingDialogProps) {
                       ))}
                     </SelectContent>
                   </Select>
-                  
+
                   {/* Show variant selector if selected profile has variants */}
                   {(() => {
                     const selectedProfile = profiles?.find(
                       (p) => p.label === profile.profile
                     );
-                    const hasVariants = selectedProfile?.variants && selectedProfile.variants.length > 0;
-                    
+                    const hasVariants =
+                      selectedProfile?.variants &&
+                      selectedProfile.variants.length > 0;
+
                     if (hasVariants) {
                       return (
                         <DropdownMenu>
@@ -130,7 +132,9 @@ export function OnboardingDialog({ open, onComplete }: OnboardingDialogProps) {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
                             <DropdownMenuItem
-                              onClick={() => setProfile({ ...profile, variant: null })}
+                              onClick={() =>
+                                setProfile({ ...profile, variant: null })
+                              }
                               className={!profile.variant ? 'bg-accent' : ''}
                             >
                               Default
@@ -138,9 +142,16 @@ export function OnboardingDialog({ open, onComplete }: OnboardingDialogProps) {
                             {selectedProfile.variants.map((variant) => (
                               <DropdownMenuItem
                                 key={variant.label}
-                                onClick={() => setProfile({ ...profile, variant: variant.label })}
+                                onClick={() =>
+                                  setProfile({
+                                    ...profile,
+                                    variant: variant.label,
+                                  })
+                                }
                                 className={
-                                  profile.variant === variant.label ? 'bg-accent' : ''
+                                  profile.variant === variant.label
+                                    ? 'bg-accent'
+                                    : ''
                                 }
                               >
                                 {variant.label}
@@ -157,7 +168,9 @@ export function OnboardingDialog({ open, onComplete }: OnboardingDialogProps) {
                           className="w-24 px-2 flex items-center justify-between"
                           disabled
                         >
-                          <span className="text-xs truncate flex-1 text-left">Default</span>
+                          <span className="text-xs truncate flex-1 text-left">
+                            Default
+                          </span>
                         </Button>
                       );
                     }

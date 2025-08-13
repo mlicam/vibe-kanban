@@ -63,15 +63,15 @@ export function McpServers() {
 
       try {
         // Load MCP servers for the selected profile/agent
-        const result = await mcpServersApi.load(
-          {
-            profile: profile.label,
-          }
-        );
+        const result = await mcpServersApi.load({
+          profile: profile.label,
+        });
         // Store the McpConfig from backend
         setMcpConfig(result.mcp_config);
         // Create the full configuration structure using the schema
-        const fullConfig = McpConfigStrategyGeneral.createFullConfig(result.mcp_config);
+        const fullConfig = McpConfigStrategyGeneral.createFullConfig(
+          result.mcp_config
+        );
         const configJson = JSON.stringify(fullConfig, null, 2);
         setMcpServers(configJson);
         setMcpConfigPath(result.config_path);
@@ -147,7 +147,11 @@ export function McpServers() {
         try {
           const fullConfig = JSON.parse(mcpServers);
           McpConfigStrategyGeneral.validateFullConfig(mcpConfig, fullConfig);
-          const mcpServersConfig = McpConfigStrategyGeneral.extractServersForApi(mcpConfig, fullConfig);
+          const mcpServersConfig =
+            McpConfigStrategyGeneral.extractServersForApi(
+              mcpConfig,
+              fullConfig
+            );
 
           await mcpServersApi.save(
             {

@@ -1,6 +1,4 @@
-import {
-  McpConfig,
-} from 'shared/types';
+import { McpConfig } from 'shared/types';
 
 export class McpConfigStrategyGeneral {
   static createFullConfig(cfg: McpConfig): Record<string, any> {
@@ -20,32 +18,45 @@ export class McpConfigStrategyGeneral {
     }
     return fullConfig;
   }
-  static validateFullConfig(mcp_config: McpConfig, full_config: Record<string, any>): void {
+  static validateFullConfig(
+    mcp_config: McpConfig,
+    full_config: Record<string, any>
+  ): void {
     // Validate using the schema path
     let current = full_config;
     for (const key of mcp_config.servers_path) {
       current = current?.[key];
       if (current === undefined) {
-        throw new Error(`Missing required field at path: ${mcp_config.servers_path.join('.')}`);
+        throw new Error(
+          `Missing required field at path: ${mcp_config.servers_path.join('.')}`
+        );
       }
     }
     if (typeof current !== 'object') {
       throw new Error('Servers configuration must be an object');
     }
   }
-  static extractServersForApi(mcp_config: McpConfig, full_config: Record<string, any>): Record<string, any> {
+  static extractServersForApi(
+    mcp_config: McpConfig,
+    full_config: Record<string, any>
+  ): Record<string, any> {
     // Extract the servers object based on the path
     let current = full_config;
     for (const key of mcp_config.servers_path) {
       current = current?.[key];
       if (current === undefined) {
-        throw new Error(`Missing required field at path: ${mcp_config.servers_path.join('.')}`);
+        throw new Error(
+          `Missing required field at path: ${mcp_config.servers_path.join('.')}`
+        );
       }
     }
     return current;
   }
 
-  static addVibeKanbanToConfig(mcp_config: McpConfig, existingConfig: Record<string, any>): Record<string, any> {
+  static addVibeKanbanToConfig(
+    mcp_config: McpConfig,
+    existingConfig: Record<string, any>
+  ): Record<string, any> {
     // Clone the existing config to avoid mutations
     const updatedConfig = JSON.parse(JSON.stringify(existingConfig));
     let current = updatedConfig;

@@ -21,16 +21,21 @@ import {
 export function TaskFollowUpSection() {
   const { task, projectId } = useContext(TaskDetailsContext);
   const { selectedAttempt } = useContext(TaskSelectedAttemptContext);
-  const { attemptData, fetchAttemptData, isAttemptRunning, defaultFollowUpVariant } = useContext(
-    TaskAttemptDataContext
-  );
+  const {
+    attemptData,
+    fetchAttemptData,
+    isAttemptRunning,
+    defaultFollowUpVariant,
+  } = useContext(TaskAttemptDataContext);
   const { profiles } = useUserSystem();
 
   const [followUpMessage, setFollowUpMessage] = useState('');
   const [isSendingFollowUp, setIsSendingFollowUp] = useState(false);
   const [followUpError, setFollowUpError] = useState<string | null>(null);
-  const [selectedVariant, setSelectedVariant] = useState<string | null>(defaultFollowUpVariant);
-  
+  const [selectedVariant, setSelectedVariant] = useState<string | null>(
+    defaultFollowUpVariant
+  );
+
   // Get the profile from the selected attempt
   const selectedProfile = selectedAttempt?.profile || null;
 
@@ -61,12 +66,7 @@ export function TaskFollowUpSection() {
   }, [defaultFollowUpVariant]);
 
   const onSendFollowUp = async () => {
-    if (
-      !task ||
-      !selectedAttempt ||
-      !followUpMessage.trim()
-    )
-      return;
+    if (!task || !selectedAttempt || !followUpMessage.trim()) return;
 
     try {
       setIsSendingFollowUp(true);
@@ -125,8 +125,10 @@ export function TaskFollowUpSection() {
 
               {/* Variant selector */}
               {(() => {
-                const hasVariants = currentProfile?.variants && currentProfile.variants.length > 0;
-                
+                const hasVariants =
+                  currentProfile?.variants &&
+                  currentProfile.variants.length > 0;
+
                 if (hasVariants) {
                   return (
                     <DropdownMenu>
@@ -174,7 +176,9 @@ export function TaskFollowUpSection() {
                       className="h-10 w-24 px-2 flex items-center justify-between"
                       disabled
                     >
-                      <span className="text-xs truncate flex-1 text-left">Default</span>
+                      <span className="text-xs truncate flex-1 text-left">
+                        Default
+                      </span>
                     </Button>
                   );
                 }

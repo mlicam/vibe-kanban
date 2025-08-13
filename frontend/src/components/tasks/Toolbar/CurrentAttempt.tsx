@@ -212,7 +212,7 @@ function CurrentAttempt({
 
   useKeyboardShortcuts({
     stopExecution: () => setShowStopConfirmation(true),
-    newAttempt: !isAttemptRunning ? handleEnterCreateAttemptMode : () => { },
+    newAttempt: !isAttemptRunning ? handleEnterCreateAttemptMode : () => {},
     hasOpenDialog: showStopConfirmation,
     closeDialog: () => setShowStopConfirmation(false),
     onEnter: () => {
@@ -381,9 +381,7 @@ function CurrentAttempt({
           <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
             Profile
           </div>
-          <div className="text-sm font-medium">
-            {selectedAttempt.profile}
-          </div>
+          <div className="text-sm font-medium">{selectedAttempt.profile}</div>
         </div>
 
         <div>
@@ -461,10 +459,11 @@ function CurrentAttempt({
           </Button>
         </div>
         <div
-          className={`text-xs font-mono px-2 py-1 rounded break-all cursor-pointer transition-all duration-300 flex items-center gap-2 ${copied
+          className={`text-xs font-mono px-2 py-1 rounded break-all cursor-pointer transition-all duration-300 flex items-center gap-2 ${
+            copied
               ? 'bg-green-100 text-green-800 border border-green-300'
               : 'text-muted-foreground bg-muted hover:bg-muted/80'
-            }`}
+          }`}
           onClick={handleCopyWorktreePath}
           title={copied ? 'Copied!' : 'Click to copy worktree path'}
         >

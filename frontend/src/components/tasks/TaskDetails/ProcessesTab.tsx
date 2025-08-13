@@ -12,10 +12,7 @@ import { TaskAttemptDataContext } from '@/components/context/taskDetailsContext.
 import { executionProcessesApi } from '@/lib/api.ts';
 import { ProfileVariantBadge } from '@/components/common/ProfileVariantBadge.tsx';
 import { extractProfileVariant } from '@/lib/utils.ts';
-import type {
-  ExecutionProcessStatus,
-  ExecutionProcess,
-} from 'shared/types';
+import type { ExecutionProcessStatus, ExecutionProcess } from 'shared/types';
 
 function ProcessesTab() {
   const { attemptData, setAttemptData } = useContext(TaskAttemptDataContext);
@@ -116,10 +113,11 @@ function ProcessesTab() {
             {attemptData.processes.map((process) => (
               <div
                 key={process.id}
-                className={`border rounded-lg p-4 hover:bg-muted/30 cursor-pointer transition-colors ${loadingProcessId === process.id
-                  ? 'opacity-50 cursor-wait'
-                  : ''
-                  }`}
+                className={`border rounded-lg p-4 hover:bg-muted/30 cursor-pointer transition-colors ${
+                  loadingProcessId === process.id
+                    ? 'opacity-50 cursor-wait'
+                    : ''
+                }`}
                 onClick={() => handleProcessClick(process)}
               >
                 <div className="flex items-start justify-between">
@@ -134,8 +132,11 @@ function ProcessesTab() {
                       </p>
                       {attemptData.processProfiles[process.id] && (
                         <p className="text-sm text-muted-foreground mt-1">
-                          Profile: <ProfileVariantBadge
-                            profileVariant={attemptData.processProfiles[process.id]}
+                          Profile:{' '}
+                          <ProfileVariantBadge
+                            profileVariant={
+                              attemptData.processProfiles[process.id]
+                            }
                           />
                         </p>
                       )}
@@ -205,7 +206,9 @@ function ProcessesTab() {
                         <p>
                           <span className="font-medium">Profile:</span>{' '}
                           <ProfileVariantBadge
-                            profileVariant={attemptData.processProfiles[selectedProcessId]}
+                            profileVariant={
+                              attemptData.processProfiles[selectedProcessId]
+                            }
                           />
                         </p>
                       )}
