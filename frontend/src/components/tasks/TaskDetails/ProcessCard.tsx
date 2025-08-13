@@ -10,14 +10,14 @@ import {
 } from 'lucide-react';
 import type {
   ExecutionProcessStatus,
-  ExecutionProcessSummary,
+  ExecutionProcess,
 } from 'shared/types';
 import { useLogStream } from '@/hooks/useLogStream';
 import { useProcessConversation } from '@/hooks/useProcessConversation';
 import DisplayConversationEntry from '@/components/NormalizedConversation/DisplayConversationEntry';
 
 interface ProcessCardProps {
-  process: ExecutionProcessSummary;
+  process: ExecutionProcess;
 }
 
 function ProcessCard({ process }: ProcessCardProps) {

@@ -163,7 +163,7 @@ function CurrentAttempt({
 
     try {
       await attemptsApi.startDevServer(selectedAttempt.id);
-      fetchAttemptData(selectedAttempt.id, selectedAttempt.task_id);
+      fetchAttemptData(selectedAttempt.id);
     } catch (err) {
       console.error('Failed to start dev server:', err);
     } finally {
@@ -178,7 +178,7 @@ function CurrentAttempt({
 
     try {
       await executionProcessesApi.stopExecutionProcess(runningDevServer.id);
-      fetchAttemptData(selectedAttempt.id, selectedAttempt.task_id);
+      fetchAttemptData(selectedAttempt.id);
     } catch (err) {
       console.error('Failed to stop dev server:', err);
     } finally {
@@ -192,9 +192,9 @@ function CurrentAttempt({
     try {
       setIsStopping(true);
       await attemptsApi.stop(selectedAttempt.id);
-      await fetchAttemptData(selectedAttempt.id, selectedAttempt.task_id);
+      await fetchAttemptData(selectedAttempt.id);
       setTimeout(() => {
-        fetchAttemptData(selectedAttempt.id, selectedAttempt.task_id);
+        fetchAttemptData(selectedAttempt.id);
       }, 1000);
     } catch (err) {
       console.error('Failed to stop executions:', err);
@@ -212,7 +212,7 @@ function CurrentAttempt({
 
   useKeyboardShortcuts({
     stopExecution: () => setShowStopConfirmation(true),
-    newAttempt: !isAttemptRunning ? handleEnterCreateAttemptMode : () => {},
+    newAttempt: !isAttemptRunning ? handleEnterCreateAttemptMode : () => { },
     hasOpenDialog: showStopConfirmation,
     closeDialog: () => setShowStopConfirmation(false),
     onEnter: () => {
@@ -224,7 +224,7 @@ function CurrentAttempt({
   const handleAttemptChange = useCallback(
     (attempt: TaskAttempt) => {
       setSelectedAttempt(attempt);
-      fetchAttemptData(attempt.id, attempt.task_id);
+      fetchAttemptData(attempt.id);
     },
     [fetchAttemptData, setSelectedAttempt]
   );
@@ -379,10 +379,10 @@ function CurrentAttempt({
 
         <div>
           <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
-            Base Agent
+            Profile
           </div>
           <div className="text-sm font-medium">
-            {selectedAttempt.base_coding_agent}
+            {selectedAttempt.profile}
           </div>
         </div>
 
@@ -461,11 +461,10 @@ function CurrentAttempt({
           </Button>
         </div>
         <div
-          className={`text-xs font-mono px-2 py-1 rounded break-all cursor-pointer transition-all duration-300 flex items-center gap-2 ${
-            copied
+          className={`text-xs font-mono px-2 py-1 rounded break-all cursor-pointer transition-all duration-300 flex items-center gap-2 ${copied
               ? 'bg-green-100 text-green-800 border border-green-300'
               : 'text-muted-foreground bg-muted hover:bg-muted/80'
-          }`}
+            }`}
           onClick={handleCopyWorktreePath}
           title={copied ? 'Copied!' : 'Click to copy worktree path'}
         >
@@ -573,7 +572,7 @@ function CurrentAttempt({
                         {new Date(attempt.created_at).toLocaleTimeString()}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {attempt.base_coding_agent || 'Base Agent'}
+                        {attempt.profile || 'Base Agent'}
                       </span>
                     </div>
                   </DropdownMenuItem>
